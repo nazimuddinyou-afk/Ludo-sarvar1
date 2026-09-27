@@ -1,1 +1,144 @@
+name: Build Android APK
 
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Unzip Ludo project
+        run: |
+          mkdir -p game
+          unzip -o ludo_multiplayer_v7.zip -d game
+          echo "Project files:"
+          find game -name project.godot -print
+
+      - name: Find project
+        run: |
+          PROJECT_DIR=$(dirname "$(find game -name project.godot | head -1)")
+          echo "PROJECT_DIR=$PROJECT_DIR" >> $GITHUB_ENV
+
+      - name: Set Android URL
+        run: |
+          sed -i 's#ws://127.0.0.1:8080#wss://ludo-sarvar1-1.onrender.com#g' "$PROJECT_DIR/scripts/main.gd"
+          sed -i 's#ws://127.0.0.1:8080#wss://ludo-sarvar1-1.onrender.com#g' "$PROJECT_DIR/scripts/online_client.gd"
+
+      - name: Create Android export preset
+        run: |
+          cat > "$PROJECT_DIR/export_presets.cfg" <<'EOF'
+          [preset.0]
+
+          name="Android"
+
+          platform="Android"
+
+          runnable=true
+
+          dedicated_server=false
+
+          custom_features=""
+
+          export_filter="all_resources"
+
+          include_filter=""
+
+          exclude_filter=""
+
+          export_path="build/LudoMultiplayer.apk"
+
+          encryption_include_filters=""
+
+          encryption_exclude_filters=""
+
+          encrypt_pck=false
+
+          encrypt_directory=false
+
+          [preset.0.options]
+
+          custom_template/debug=""
+
+          custom_template/release=""
+
+          gradle_build/use_gradle_build=false
+
+          gradle_build/export_format=0
+
+          gradle_build/min_sdk=""
+
+          gradle_build/target_sdk=""
+
+          architectures/armeabi-v7a=true
+
+          architectures/arm64-v8a=true
+
+          architectures/x86=false
+
+          architectures/x86_64=false
+
+          version/code=1
+
+          version/name="1.0"
+
+          package/unique_name="com.nazimuddinyou.ludomultiplayer"
+
+          package/name="Ludo Multiplayer"
+
+          package/signed=true
+
+          package/classify_as_game=true
+
+          package/retain_data_on_uninstall=false
+
+          package/exclude_from_recents=false
+
+          package/show_in_app_library=true
+
+          graphics/opengl_debug=false
+
+          screen/immersive_mode=false
+
+          screen/support_small=true
+
+          screen/support_normal=true
+
+          screen/support_large=true
+
+          screen/support_xlarge=true
+
+          user_data_backup/allow=false
+
+          command_line/extra_args=""
+
+          apk_expansion/enable=false
+
+          permissions/custom_permissions=PackedStringArray()
+
+          EOF
+
+      - name: Setup Android
+        uses: android-actions/setup-android@v3
+
+      - name: Export APK
+        id: export
+        uses: firebelley/godot-export@v8.0.0
+        with:
+          godot_executable_download_url: https://github.com/godotengine/godot-builds/releases/download/4.5.1-stable/Godot_v4.5.1-stable_linux.x86_64.zip
+          godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/4.5.1-stable/Godot_v4.5.1-stable_export_templates.tpz
+          relative_project_path: ${{ env.PROJECT_DIR }}
+          presets_to_export: Android
+          cache: true
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Ludo-Multiplayer-APK
+          path: "**/*.apk"
