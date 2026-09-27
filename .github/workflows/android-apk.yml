@@ -125,10 +125,12 @@ jobs:
           EOF
 
       - name: Setup Android
-        uses: android-actions/setup-android@v4        - name: Start ADB
-          run: |
-            adb start-server
+        uses: android-actions/setup-android@v4    
+        
+        - name: Start ADB
+          run: |    adb start-server
             adb devices
+            
       - name: Export APK
         id: export
         uses: firebelley/godot-export@v8.0.0
