@@ -126,13 +126,14 @@ jobs:
           relative_project_path: ${{ env.PROJECT_DIR }}
           presets_to_export: Android
           cache: true
+    
       - name: Find APK
         run: |
-            echo "Searching for APK..."
-            find . -type f \( -name "*.apk" -o -name "*.aab" \) -print
-            echo "=== BUILD DIRECTORY ==="
-            find . -type d -name "build" -print
-           
+              echo "=== ALL APK FILES ==="
+              find . -type f -name "*.apk" -print
+              echo "=== ALL FILES IN PROJECT ==="
+              find . -type f | tail -100
+             
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
