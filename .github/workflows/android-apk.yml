@@ -126,9 +126,9 @@ jobs:
           relative_project_path: ${{ env.PROJECT_DIR }}
           presets_to_export: Android
           cache: true
-
+          
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Ludo-Multiplayer-APK
-          path: "**/*.apk"
+          path: "${{ env.PROJECT_DIR }}/build/LudoMultiplayer.apk"
