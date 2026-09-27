@@ -126,7 +126,14 @@ jobs:
 
       - name: Setup Android
         uses: android-actions/setup-android@v4
-            
+
+      - name: Prepare ADB
+        shell: bash
+        run: |
+           export PATH="${ANDROID_HOME}/platform-tools:${PATH}"
+           adb kill-server || true
+           adb start-server
+           adb version
       - name: Export APK
         id: export
         uses: firebelley/godot-export@v8.0.0
