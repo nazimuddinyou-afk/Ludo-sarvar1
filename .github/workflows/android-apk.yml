@@ -127,37 +127,35 @@ jobs:
       - name: Setup Android
         uses: android-actions/setup-android@v4
         
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - name: Configure Godot Android
+      - name: Create Android Keystore
         run: |
-          mkdir -p ~/.config/godot
-          cat > ~/.config/godot/editor_settings-4.tres <<EOF
-          [gd_resource type="EditorSettings" format=3]
-
-          [resource]
-          export/android/android_sdk_path = "$ANDROID_HOME"
-          export/android/java_sdk_path = "$JAVA_HOME"
-          EOF
-      - name: Install Android SDK
-        run: |
-          yes | sdkmanager --licenses || true
-          sdkmanager "platform-tools" "build-tools;35.0.1" "platforms;android-35"
+          keytool -genkeypair -v \
+            -keystore "$RUNNER_TEMP/ludo-release.keystore" \
+            -storepass android \
+            -keypass android \
+            -alias ludo \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -dname "CN=Ludo Multiplayer,O=Ludo,C=BD"
 
       - name: Export APK
         id: export
         uses: firebelley/godot-export@v8.0.0
+        env:
+          GODOT_ANDROID_KEYSTORE_DEBUG_PATH: ${{ runner.temp }}/ludo-release.keystore
+          GODOT_ANDROID_KEYSTORE_DEBUG_USER: ludo
+          GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD: android
+          GODOT_ANDROID_KEYSTORE_RELEASE_PATH: ${{ runner.temp }}/ludo-release.keystore
+          GODOT_ANDROID_KEYSTORE_RELEASE_USER: ludo
+          GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD: android
         with:
           godot_executable_download_url: https://github.com/godotengine/godot-builds/releases/download/4.5.1-stable/Godot_v4.5.1-stable_linux.x86_64.zip
           godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/4.5.1-stable/Godot_v4.5.1-stable_export_templates.tpz
           relative_project_path: ${{ env.PROJECT_DIR }}
           presets_to_export: Android
           cache: true
-
+          
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
