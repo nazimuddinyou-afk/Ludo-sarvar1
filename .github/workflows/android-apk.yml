@@ -130,6 +130,7 @@ jobs:
       - name: Start ADB
         run: |
             adb start-server
+            sleep 3
             adb devices
             
       - name: Export APK
