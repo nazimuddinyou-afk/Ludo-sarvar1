@@ -126,12 +126,6 @@ jobs:
 
       - name: Setup Android
         uses: android-actions/setup-android@v4
-
-      - name: Start ADB
-        run: |
-            adb start-server
-            sleep 3
-            adb devices
             
       - name: Export APK
         id: export
