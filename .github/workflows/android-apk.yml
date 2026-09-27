@@ -23,7 +23,11 @@ jobs:
         run: |
           PROJECT_DIR=$(dirname "$(find game -name project.godot | head -1)")
           echo "PROJECT_DIR=$PROJECT_DIR" >> "$GITHUB_ENV"
-
+          
+      - name: Prepare Android project
+        run: |
+          sed -i '/^\[rendering\]$/a textures/vram_compression/import_etc2_astc=true' "$PROJECT_DIR/project.godot"
+          
       - name: Set Android URL
         run: |
           sed -i 's#ws://127.0.0.1:8080#wss://ludo-sarvar1-1.onrender.com#g' "$PROJECT_DIR/scripts/main.gd"
