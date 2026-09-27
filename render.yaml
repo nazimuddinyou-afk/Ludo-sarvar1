@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: ludo-multiplayer-server
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 8080
