@@ -129,10 +129,13 @@ jobs:
           
       - name: Find APK
         run: |
-              find . -type f -name "*.apk" -print
-              
+           echo "Searching for APK..."
+           find . -type f -name "*.apk" -print
+           
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: LudoMultiplayer-APK
-          path: game/ludo_multiplayer_starter/app/build/outputs/apk/release/app-release.apk
+         name: LudoMultiplayer-APK
+         path: "**/*.apk"
+         if-no-files-found: error
+      
