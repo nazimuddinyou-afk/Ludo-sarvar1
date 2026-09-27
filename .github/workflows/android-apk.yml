@@ -125,10 +125,10 @@ jobs:
           EOF
 
       - name: Setup Android
-       uses: android-actions/setup-android@v4
+        uses: android-actions/setup-android@v4
 
       - name: Start ADB
-       run: |
+        run: |
             adb start-server
             adb devices
             
