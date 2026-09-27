@@ -40,7 +40,7 @@ jobs:
 
           platform="Android"
 
-          runnable=true
+          runnable=false
 
           dedicated_server=false
 
