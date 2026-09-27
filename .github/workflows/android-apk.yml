@@ -127,8 +127,12 @@ jobs:
           presets_to_export: Android
           cache: true
           
+      - name: Find APK
+        run: |
+              find . -type f -name "*.apk" -print
+              
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Ludo-Multiplayer-APK
-          path: "${{ env.PROJECT_DIR }}/build/LudoMultiplayer.apk"
+          name: LudoMultiplayer-APK
+          path: game/ludo_multiplayer_starter/app/build/outputs/apk/release/app-release.apk
