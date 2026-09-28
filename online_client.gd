@@ -4,7 +4,7 @@ class_name OnlineClient
 signal event_received(message: Dictionary)
 var socket := WebSocketPeer.new()
 var connected := false
-var url := "ws://127.0.0.1:8080"
+var url := "wss://ludo-sarvar1-1.onrender.com"
 
 func connect_to_server(server_url: String) -> int:
     url = server_url.strip_edges()
