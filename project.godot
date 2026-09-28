@@ -1,0 +1,13 @@
+[application]
+config/name="Ludo Multiplayer"
+run/main_scene="res://scenes/Main.tscn"
+[display]
+window/size/viewport_width=720
+window/size/viewport_height=1280
+window/size/window_width_override=720
+window/size/window_height_override=1280
+[rendering]
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+[network]
+
