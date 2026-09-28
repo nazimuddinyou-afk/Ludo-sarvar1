@@ -1,7 +1,7 @@
 extends Control
 
 const FINISH := 57
-const SERVER_URL := "ws://127.0.0.1:8080"
+const SERVER_URL := "wss://ludo-sarvar1-1.onrender.com"
 var online: OnlineClient
 var room_code := "----"
 var my_slot := -1
